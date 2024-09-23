@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from tests.protocols.helpers import \
-    client_test_on_property_change, \
-    client_test_on_event, \
-    client_test_read_property, \
-    client_test_write_property, \
-    client_test_invoke_action, \
-    client_test_invoke_action_error, \
-    client_test_on_property_change_error
+from tests.protocols.helpers import (
+    client_test_on_property_change,
+    client_test_on_event,
+    client_test_read_property,
+    client_test_write_property,
+    client_test_invoke_action,
+    client_test_invoke_action_error,
+    client_test_on_property_change_error,
+)
 from wotpy.protocols.http.client import HTTPClient
 
 

@@ -51,9 +51,11 @@ class BaseProtocolServer(object):
         """Returns a BaseCodec to serialize or deserialize content for the given media type."""
 
         try:
-            return next(codec for codec in self._codecs if media_type in codec.media_types)
+            return next(
+                codec for codec in self._codecs if media_type in codec.media_types
+            )
         except StopIteration:
-            raise ValueError('Unknown media type')
+            raise ValueError("Unknown media type")
 
     def add_codec(self, codec):
         """Adds a BaseCodec to this server."""
@@ -103,6 +105,7 @@ class BaseProtocolServer(object):
     @abstractmethod
     def stop(self):
         """Coroutine that stops the server.
-        Some requests could be still in progress and would be served after the server has stopped."""
+        Some requests could be still in progress and would be served after the server has stopped.
+        """
 
         raise NotImplementedError()

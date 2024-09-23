@@ -55,7 +55,7 @@ class MQTTHandlerRunner(object):
         self._logr.log(
             level,
             "{} - {}".format(self._mqtt_handler.__class__.__name__, msg),
-            **kwargs
+            **kwargs,
         )
 
     def _build_client_config(self):

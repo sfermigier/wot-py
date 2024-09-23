@@ -10,7 +10,11 @@ from faker import Faker
 
 from tests.utils import find_free_port
 from wotpy.protocols.http.server import HTTPServer
-from wotpy.wot.dictionaries.interaction import PropertyFragmentDict, ActionFragmentDict, EventFragmentDict
+from wotpy.wot.dictionaries.interaction import (
+    PropertyFragmentDict,
+    ActionFragmentDict,
+    EventFragmentDict,
+)
 from wotpy.wot.exposed.thing import ExposedThing
 from wotpy.wot.servient import Servient
 from wotpy.wot.td import ThingDescription
@@ -23,19 +27,19 @@ def http_server():
 
     exposed_thing = ExposedThing(servient=Servient(), thing=Thing(id=uuid.uuid4().urn))
 
-    exposed_thing.add_property(uuid.uuid4().hex, PropertyFragmentDict({
-        "type": "number",
-        "observable": True
-    }), value=Faker().pyint())
+    exposed_thing.add_property(
+        uuid.uuid4().hex,
+        PropertyFragmentDict({"type": "number", "observable": True}),
+        value=Faker().pyint(),
+    )
 
-    exposed_thing.add_property(uuid.uuid4().hex, PropertyFragmentDict({
-        "type": "number",
-        "observable": True
-    }), value=Faker().pyint())
+    exposed_thing.add_property(
+        uuid.uuid4().hex,
+        PropertyFragmentDict({"type": "number", "observable": True}),
+        value=Faker().pyint(),
+    )
 
-    exposed_thing.add_event(uuid.uuid4().hex, EventFragmentDict({
-        "type": "object"
-    }))
+    exposed_thing.add_event(uuid.uuid4().hex, EventFragmentDict({"type": "object"}))
 
     action_name = uuid.uuid4().hex
 
@@ -45,10 +49,11 @@ def http_server():
         yield tornado.gen.sleep(0)
         raise tornado.gen.Return(input_value * 3)
 
-    exposed_thing.add_action(action_name, ActionFragmentDict({
-        "input": {"type": "number"},
-        "output": {"type": "number"}
-    }), triple)
+    exposed_thing.add_action(
+        action_name,
+        ActionFragmentDict({"input": {"type": "number"}, "output": {"type": "number"}}),
+        triple,
+    )
 
     port = find_free_port()
 
@@ -95,30 +100,16 @@ def http_servient():
         "id": uuid.uuid4().urn,
         "title": uuid.uuid4().hex,
         "properties": {
-            property_name_01: {
-                "observable": True,
-                "type": "string"
-            },
-            property_name_02: {
-                "observable": True,
-                "type": "string"
-            }
+            property_name_01: {"observable": True, "type": "string"},
+            property_name_02: {"observable": True, "type": "string"},
         },
         "actions": {
             action_name_01: {
-                "input": {
-                    "type": "number"
-                },
-                "output": {
-                    "type": "number"
-                },
+                "input": {"type": "number"},
+                "output": {"type": "number"},
             }
         },
-        "events": {
-            event_name_01: {
-                "type": "string"
-            }
-        },
+        "events": {event_name_01: {"type": "string"}},
     }
 
     td = ThingDescription(td_dict)

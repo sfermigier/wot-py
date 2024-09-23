@@ -14,7 +14,11 @@ from tests.td_examples import TD_EXAMPLE
 from tests.utils import find_free_port
 from wotpy.protocols.client import BaseProtocolClient
 from wotpy.wot.consumed.thing import ConsumedThing
-from wotpy.wot.dictionaries.interaction import PropertyFragmentDict, ActionFragmentDict, EventFragmentDict
+from wotpy.wot.dictionaries.interaction import (
+    PropertyFragmentDict,
+    ActionFragmentDict,
+    EventFragmentDict,
+)
 from wotpy.wot.exposed.thing import ExposedThing
 from wotpy.wot.servient import Servient
 from wotpy.wot.td import ThingDescription
@@ -24,37 +28,34 @@ from wotpy.wot.thing import Thing
 def _build_property_fragment():
     """Builds and returns a random Property init fragment."""
 
-    return PropertyFragmentDict({
-        "description": Faker().sentence(),
-        "readOnly": False,
-        "observable": True,
-        "type": "string"
-    })
+    return PropertyFragmentDict(
+        {
+            "description": Faker().sentence(),
+            "readOnly": False,
+            "observable": True,
+            "type": "string",
+        }
+    )
 
 
 def _build_event_fragment():
     """Builds and returns a random Event init fragment."""
 
-    return EventFragmentDict({
-        "description": Faker().sentence(),
-        "data": {"type": "string"}
-    })
+    return EventFragmentDict(
+        {"description": Faker().sentence(), "data": {"type": "string"}}
+    )
 
 
 def _build_action_fragment():
     """Builds and returns a random Action init fragment."""
 
-    return ActionFragmentDict({
-        "description": Faker().sentence(),
-        "input": {
-            "type": "string",
-            "description": Faker().sentence()
-        },
-        "output": {
-            "type": "string",
-            "description": Faker().sentence()
+    return ActionFragmentDict(
+        {
+            "description": Faker().sentence(),
+            "input": {"type": "string", "description": Faker().sentence()},
+            "output": {"type": "string", "description": Faker().sentence()},
         }
-    })
+    )
 
 
 @pytest.fixture
@@ -82,9 +83,7 @@ def event_fragment():
 def exposed_thing():
     """Builds and returns a random ExposedThing."""
 
-    return ExposedThing(
-        servient=Servient(),
-        thing=Thing(id=uuid.uuid4().urn))
+    return ExposedThing(servient=Servient(), thing=Thing(id=uuid.uuid4().urn))
 
 
 @pytest.fixture
@@ -146,13 +145,12 @@ def consumed_exposed_pair():
     """Returns a dict with two keys:
     * consumed_thing: A ConsumedThing instance. The Servient instance that contains this
     ConsumedThing has been patched to use the ExposedThingProxyClient Protocol Binding client.
-    * exposed_thing: The ExposedThing behind the previous ConsumedThing (for assertion purposes)."""
+    * exposed_thing: The ExposedThing behind the previous ConsumedThing (for assertion purposes).
+    """
 
     servient = Servient()
 
-    exp_thing = ExposedThing(
-        servient=servient,
-        thing=Thing(id=uuid.uuid4().urn))
+    exp_thing = ExposedThing(servient=servient, thing=Thing(id=uuid.uuid4().urn))
 
     servient.select_client = MagicMock(return_value=ExposedThingProxyClient(exp_thing))
 
@@ -170,7 +168,7 @@ def consumed_exposed_pair():
 
     return {
         "consumed_thing": ConsumedThing(servient=servient, td=td),
-        "exposed_thing": exp_thing
+        "exposed_thing": exp_thing,
     }
 
 
@@ -178,7 +176,9 @@ def consumed_exposed_pair():
 def servient(request):
     """Returns an empty WoT Servient."""
 
-    catalogue_port = find_free_port() if request.param.get('catalogue_enabled') else None
+    catalogue_port = (
+        find_free_port() if request.param.get("catalogue_enabled") else None
+    )
 
     servient = Servient(catalogue_port=catalogue_port)
 

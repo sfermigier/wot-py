@@ -30,7 +30,7 @@ def test_validate_err():
         lambda x: x.update({"actions": "hello-interactions"}) or x,
         lambda x: x.update({"events": {"overheating": {"forms": 0.5}}}) or x,
         lambda x: x.update({"events": {"Invalid Name": {}}}) or x,
-        lambda x: x.update({"events": {100: {"label": "Invalid Name"}}}) or x
+        lambda x: x.update({"events": {100: {"label": "Invalid Name"}}}) or x,
     ]
 
     for update_func in update_funcs:
@@ -65,7 +65,9 @@ def test_from_thing():
     thing = Thing(id=thing_id)
 
     action = Action(thing=thing, name=action_id)
-    action_form = Form(interaction=action, protocol=Protocols.HTTP, href=action_form_href)
+    action_form = Form(
+        interaction=action, protocol=Protocols.HTTP, href=action_form_href
+    )
     action.add_form(action_form)
     thing.add_interaction(action)
 

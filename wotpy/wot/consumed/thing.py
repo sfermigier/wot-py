@@ -61,7 +61,7 @@ class ConsumedThing(object):
             name,
             input_value,
             timeout=timeout,
-            **client_kwargs.get(client.protocol, {})
+            **client_kwargs.get(client.protocol, {}),
         )
 
         return result
@@ -80,7 +80,7 @@ class ConsumedThing(object):
             name,
             value,
             timeout=timeout,
-            **client_kwargs.get(client.protocol, {})
+            **client_kwargs.get(client.protocol, {}),
         )
 
     async def read_property(self, name, timeout=None, client_kwargs=None):

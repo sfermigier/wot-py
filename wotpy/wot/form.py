@@ -45,11 +45,14 @@ class Form(object):
         """Returns the ID of this Form.
         The ID is a hash that is based on the Form attributes.
         No two Forms with the same ID may exist within the same Interaction.
-        The ID of a Form could change during its lifetime if some attributes are updated."""
+        The ID of a Form could change during its lifetime if some attributes are updated.
+        """
 
-        return hash((
-            self.protocol,
-            self.href,
-            self.content_type,
-            tuple(self.op) if isinstance(self.op, list) else self.op
-        ))
+        return hash(
+            (
+                self.protocol,
+                self.href,
+                self.content_type,
+                tuple(self.op) if isinstance(self.op, list) else self.op,
+            )
+        )

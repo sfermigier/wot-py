@@ -16,11 +16,12 @@ from faker import Faker
 from tests.protocols.ws.conftest import build_websocket_url
 from tests.utils import find_free_port, run_test_coroutine
 from wotpy.protocols.ws.enums import WebsocketMethods, WebsocketErrors, WebsocketSchemes
-from wotpy.protocols.ws.messages import \
-    WebsocketMessageRequest, \
-    WebsocketMessageResponse, \
-    WebsocketMessageError, \
-    WebsocketMessageEmittedItem
+from wotpy.protocols.ws.messages import (
+    WebsocketMessageRequest,
+    WebsocketMessageResponse,
+    WebsocketMessageError,
+    WebsocketMessageEmittedItem,
+)
 from wotpy.protocols.ws.server import WebsocketServer
 from wotpy.wot.dictionaries.interaction import PropertyFragmentDict
 from wotpy.wot.exposed.thing import ExposedThing
@@ -60,7 +61,7 @@ def test_read_property(websocket_server):
     def test_coroutine():
         conns = yield [
             tornado.websocket.websocket_connect(url_thing_01),
-            tornado.websocket.websocket_connect(url_thing_02)
+            tornado.websocket.websocket_connect(url_thing_02),
         ]
 
         request_id_01 = Faker().pyint()
@@ -70,17 +71,20 @@ def test_read_property(websocket_server):
         ws_request_prop_01 = WebsocketMessageRequest(
             method=WebsocketMethods.READ_PROPERTY,
             params={"name": prop_name_01},
-            msg_id=request_id_01)
+            msg_id=request_id_01,
+        )
 
         ws_request_prop_02 = WebsocketMessageRequest(
             method=WebsocketMethods.READ_PROPERTY,
             params={"name": prop_name_02},
-            msg_id=request_id_02)
+            msg_id=request_id_02,
+        )
 
         ws_request_prop_03 = WebsocketMessageRequest(
             method=WebsocketMethods.READ_PROPERTY,
             params={"name": prop_name_03},
-            msg_id=request_id_03)
+            msg_id=request_id_03,
+        )
 
         conns[0].write_message(ws_request_prop_01.to_json())
         conns[0].write_message(ws_request_prop_02.to_json())
@@ -121,7 +125,8 @@ def test_write_property(websocket_server):
         ws_request = WebsocketMessageRequest(
             method=WebsocketMethods.WRITE_PROPERTY,
             params={"name": prop_name, "value": updated_value},
-            msg_id=msg_id)
+            msg_id=msg_id,
+        )
 
         value = yield exposed_thing_01.read_property(prop_name)
 
@@ -140,7 +145,8 @@ def test_write_property(websocket_server):
         ws_request_err = WebsocketMessageRequest(
             method=WebsocketMethods.WRITE_PROPERTY,
             params={"name": prop_name + Faker().pystr(), "value": updated_value},
-            msg_id=msg_id)
+            msg_id=msg_id,
+        )
 
         conn.write_message(ws_request_err.to_json())
         raw_error = yield conn.read_message()
@@ -173,7 +179,8 @@ def test_invoke_action(websocket_server):
         msg_invoke_req = WebsocketMessageRequest(
             method=WebsocketMethods.INVOKE_ACTION,
             params={"name": action_name, "parameters": input_val},
-            msg_id=msg_id)
+            msg_id=msg_id,
+        )
 
         conn.write_message(msg_invoke_req.to_json())
 
@@ -208,7 +215,8 @@ def test_on_property_change(websocket_server):
         msg_observe_req = WebsocketMessageRequest(
             method=WebsocketMethods.ON_PROPERTY_CHANGE,
             params={"name": prop_name},
-            msg_id=observe_msg_id)
+            msg_id=observe_msg_id,
+        )
 
         conn.write_message(msg_observe_req.to_json())
 
@@ -260,7 +268,8 @@ def test_on_undefined_property_change(websocket_server):
         msg_observe_req = WebsocketMessageRequest(
             method=WebsocketMethods.ON_PROPERTY_CHANGE,
             params={"name": prop_name_err},
-            msg_id=observe_msg_id)
+            msg_id=observe_msg_id,
+        )
 
         conn.write_message(msg_observe_req.to_json())
 
@@ -295,7 +304,8 @@ def test_on_event(websocket_server):
         msg_observe_req = WebsocketMessageRequest(
             method=WebsocketMethods.ON_EVENT,
             params={"name": event_name},
-            msg_id=observe_msg_id)
+            msg_id=observe_msg_id,
+        )
 
         conn.write_message(msg_observe_req.to_json())
 
@@ -346,7 +356,8 @@ def test_on_undefined_event(websocket_server):
         msg_observe_req = WebsocketMessageRequest(
             method=WebsocketMethods.ON_EVENT,
             params={"name": event_name_err},
-            msg_id=observe_msg_id)
+            msg_id=observe_msg_id,
+        )
 
         conn.write_message(msg_observe_req.to_json())
 
@@ -379,7 +390,8 @@ def test_dispose(websocket_server):
         msg_observe_req = WebsocketMessageRequest(
             method=WebsocketMethods.ON_PROPERTY_CHANGE,
             params={"name": prop_name},
-            msg_id=observe_msg_id)
+            msg_id=observe_msg_id,
+        )
 
         conn.write_message(msg_observe_req.to_json())
 
@@ -400,7 +412,8 @@ def test_dispose(websocket_server):
         msg_dispose_req = WebsocketMessageRequest(
             method=WebsocketMethods.DISPOSE,
             params={"subscription": subscription_id},
-            msg_id=dispose_msg_id)
+            msg_id=dispose_msg_id,
+        )
 
         conn.write_message(msg_dispose_req.to_json())
 
@@ -421,8 +434,8 @@ def test_dispose(websocket_server):
 
         with pytest.raises(tornado.gen.TimeoutError):
             yield tornado.gen.with_timeout(
-                timeout=datetime.timedelta(milliseconds=200),
-                future=conn.read_message())
+                timeout=datetime.timedelta(milliseconds=200), future=conn.read_message()
+            )
 
     run_test_coroutine(test_coroutine)
 
@@ -434,10 +447,11 @@ def test_ssl_context(self_signed_ssl_context):
 
     prop_name = uuid.uuid4().hex
 
-    exposed_thing.add_property(prop_name, PropertyFragmentDict({
-        "type": "string",
-        "observable": True
-    }), value=Faker().pystr())
+    exposed_thing.add_property(
+        prop_name,
+        PropertyFragmentDict({"type": "string", "observable": True}),
+        value=Faker().pystr(),
+    )
 
     port = find_free_port()
 
@@ -456,7 +470,9 @@ def test_ssl_context(self_signed_ssl_context):
             http_req = tornado.httpclient.HTTPRequest(ws_url, method="GET")
             yield tornado.websocket.websocket_connect(http_req)
 
-        http_req = tornado.httpclient.HTTPRequest(ws_url, method="GET", validate_cert=False)
+        http_req = tornado.httpclient.HTTPRequest(
+            ws_url, method="GET", validate_cert=False
+        )
         conn = yield tornado.websocket.websocket_connect(http_req)
 
         request_id = Faker().pyint()
@@ -464,7 +480,8 @@ def test_ssl_context(self_signed_ssl_context):
         msg_req = WebsocketMessageRequest(
             method=WebsocketMethods.READ_PROPERTY,
             params={"name": prop_name},
-            msg_id=request_id)
+            msg_id=request_id,
+        )
 
         conn.write_message(msg_req.to_json())
 

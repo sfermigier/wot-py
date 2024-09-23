@@ -10,12 +10,13 @@ import json
 from jsonschema import validate, ValidationError
 
 from wotpy.protocols.ws.enums import WebsocketErrors
-from wotpy.protocols.ws.schemas import \
-    SCHEMA_REQUEST, \
-    SCHEMA_RESPONSE, \
-    SCHEMA_EMITTED_ITEM, \
-    SCHEMA_ERROR, \
-    JSON_RPC_VERSION
+from wotpy.protocols.ws.schemas import (
+    SCHEMA_REQUEST,
+    SCHEMA_RESPONSE,
+    SCHEMA_EMITTED_ITEM,
+    SCHEMA_ERROR,
+    JSON_RPC_VERSION,
+)
 from wotpy.utils.utils import to_json_obj
 
 
@@ -27,7 +28,7 @@ def parse_ws_message(raw_msg):
         WebsocketMessageRequest,
         WebsocketMessageError,
         WebsocketMessageResponse,
-        WebsocketMessageEmittedItem
+        WebsocketMessageEmittedItem,
     ]
 
     for klass in msg_klasses:
@@ -60,9 +61,8 @@ class WebsocketMessageRequest(object):
             validate(msg, SCHEMA_REQUEST)
 
             return WebsocketMessageRequest(
-                method=msg["method"],
-                params=msg["params"],
-                msg_id=msg.get("id", None))
+                method=msg["method"], params=msg["params"], msg_id=msg.get("id", None)
+            )
         except Exception as ex:
             raise WebsocketMessageException(str(ex))
 
@@ -89,7 +89,7 @@ class WebsocketMessageRequest(object):
             "jsonrpc": JSON_RPC_VERSION,
             "method": self.method,
             "params": self.params,
-            "id": self.id
+            "id": self.id,
         }
 
         return msg
@@ -113,8 +113,8 @@ class WebsocketMessageResponse(object):
             validate(msg, SCHEMA_RESPONSE)
 
             return WebsocketMessageResponse(
-                result=msg["result"],
-                msg_id=msg.get("id", None))
+                result=msg["result"], msg_id=msg.get("id", None)
+            )
         except Exception as ex:
             raise WebsocketMessageException(str(ex))
 
@@ -136,11 +136,7 @@ class WebsocketMessageResponse(object):
     def to_dict(self):
         """Returns this message as a dict."""
 
-        msg = {
-            "jsonrpc": JSON_RPC_VERSION,
-            "result": self.result,
-            "id": self.id
-        }
+        msg = {"jsonrpc": JSON_RPC_VERSION, "result": self.result, "id": self.id}
 
         return msg
 
@@ -166,11 +162,14 @@ class WebsocketMessageError(object):
                 message=msg["error"]["message"],
                 code=msg["error"]["code"],
                 data=msg["error"].get("data", None),
-                msg_id=msg.get("id", None))
+                msg_id=msg.get("id", None),
+            )
         except Exception as ex:
             raise WebsocketMessageException(str(ex))
 
-    def __init__(self, message, code=WebsocketErrors.INTERNAL_ERROR, data=None, msg_id=None):
+    def __init__(
+        self, message, code=WebsocketErrors.INTERNAL_ERROR, data=None, msg_id=None
+    ):
         self.message = message
         self.msg_id = msg_id
         self.code = code
@@ -192,12 +191,8 @@ class WebsocketMessageError(object):
 
         msg = {
             "jsonrpc": JSON_RPC_VERSION,
-            "error": {
-                "code": self.code,
-                "message": self.message,
-                "data": self.data
-            },
-            "id": self.id
+            "error": {"code": self.code, "message": self.message, "data": self.data},
+            "id": self.id,
         }
 
         return msg
@@ -221,9 +216,8 @@ class WebsocketMessageEmittedItem(object):
             validate(msg, SCHEMA_EMITTED_ITEM)
 
             return WebsocketMessageEmittedItem(
-                subscription_id=msg["subscription"],
-                name=msg["name"],
-                data=msg["data"])
+                subscription_id=msg["subscription"], name=msg["name"], data=msg["data"]
+            )
         except Exception as ex:
             raise WebsocketMessageException(str(ex))
 
@@ -243,7 +237,7 @@ class WebsocketMessageEmittedItem(object):
         msg = {
             "subscription": self.subscription_id,
             "name": self.name,
-            "data": self.data
+            "data": self.data,
         }
 
         return msg

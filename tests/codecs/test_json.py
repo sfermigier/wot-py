@@ -10,9 +10,9 @@ from wotpy.codecs.json_codec import JsonCodec
 def test_json_codec():
     """Content may be serialized to and deserialized from JSON."""
 
-    test_dict = {'unicode': 'áéíóú', 'ascii': 'hello', 'num': 100}
-    test_unicode = u'{"unicode": "áéíóú", "ascii": "hello", "num": 100}'
-    test_bytes = test_unicode.encode('utf8')
+    test_dict = {"unicode": "áéíóú", "ascii": "hello", "num": 100}
+    test_unicode = '{"unicode": "áéíóú", "ascii": "hello", "num": 100}'
+    test_bytes = test_unicode.encode("utf8")
 
     json_codec = JsonCodec()
 
